@@ -24,6 +24,36 @@ module.exports = (server) => {
 		
 		res.json(courses);
 	});
-	
+
+	router.post('/course_delete', (req, res, next) => {
+		const id = +req.body.data.id;
+		if(id){
+            const delIdx = server.db.getState().courses.findIndex(course => course.id === id);
+			if(delIdx > -1){
+                server.db.getState().courses.splice(delIdx, 1);
+                res.json({msg: 'ok'});
+			}
+			else
+				res.status(401).send(`Could not find Course with "id" = ${id}`);
+		}
+		else
+			res.status(401).send('Course id was not provided');
+	});
+
+	router.post('/course_update', (req, res, next) => {
+		const updatedCourse = req.body.data.updatedCourse;
+		if(updatedCourse){
+			const curCourse = server.db.getState().courses.find(course => course.id === updatedCourse.id);
+			if(curCourse){
+				Object.keys(curCourse).forEach(key => curCourse[key] = updatedCourse[key]);
+				res.json({msg: 'ok'});
+			}
+			else
+				res.status(401).send(`Could not find Course with "id" = ${updatedCourse.id}`)
+		}
+		else
+            res.status(401).send('Course for update was not provided');
+	});
+
 	return router;
 };
