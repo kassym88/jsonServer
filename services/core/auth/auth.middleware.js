@@ -25,8 +25,8 @@ module.exports = (server) => {
 			   res.status(401).send("Wrong password");
 		   }
 		});*/
-		const login = req.body.data.login,
-			password = req.body.data.password;
+		const login = req.body.login,
+			password = req.body.password;
 		console.log('login', login);
 		console.log('password', password);
 		if(login && password){

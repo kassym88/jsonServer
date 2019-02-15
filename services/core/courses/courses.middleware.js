@@ -26,7 +26,7 @@ module.exports = (server) => {
 	});
 
 	router.post('/course_delete', (req, res, next) => {
-		const id = +req.body.data.id;
+		const id = +req.body.id;
 		if(id){
             const delIdx = server.db.getState().courses.findIndex(course => course.id === id);
 			if(delIdx > -1){
@@ -41,7 +41,7 @@ module.exports = (server) => {
 	});
 
 	router.post('/course_update', (req, res, next) => {
-		const updatedCourse = req.body.data.updatedCourse;
+		const updatedCourse = req.body.updatedCourse;
 		if(updatedCourse){
 			const curCourse = server.db.getState().courses.find(course => course.id === updatedCourse.id);
 			if(curCourse){
@@ -53,6 +53,20 @@ module.exports = (server) => {
 		}
 		else
             res.status(401).send('Course for update was not provided');
+	});
+
+	router.post('/course_search', (req, res, next) => {
+		const searchWord = req.body.searchWord;
+		if(searchWord){
+			res.json(
+                server.db.getState().courses.filter(course =>
+					course.name.toLowerCase().indexOf(searchWord.toLowerCase()) > -1
+					|| course.description.toLowerCase().indexOf(searchWord.toLowerCase()) > -1
+				)
+			);
+		}
+		else
+			res.status(401).send('No search word provided');
 	});
 
 	return router;
