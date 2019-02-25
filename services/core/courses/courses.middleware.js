@@ -55,6 +55,19 @@ module.exports = (server) => {
             res.status(401).send('Course for update was not provided');
 	});
 
+    router.post('/course_create', (req, res, next) => {
+        const newCourse = req.body.newCourse;
+        if(newCourse){
+            const courses = server.db.getState().courses;
+            const newId = courses[courses.length-1].id + 1;
+            newCourse.id = newId;
+            courses[courses.length] = newCourse;
+            res.json({msg: 'ok'});
+        }
+        else
+            res.status(401).send('New course was not provided');
+    });
+
 	router.post('/course_search', (req, res, next) => {
 		const searchWord = req.body.searchWord;
 		if(searchWord){
