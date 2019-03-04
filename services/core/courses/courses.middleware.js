@@ -82,5 +82,14 @@ module.exports = (server) => {
 			res.status(401).send('No search word provided');
 	});
 
+	router.post('/course_get_by_id', (req, res, next) => {
+        const id = req.body.id;
+        if(id){
+            res.json(server.db.getState().courses.find(course => course.id === id));
+        }
+        else
+            res.status(401).send('No course id provided');
+	});
+
 	return router;
 };
